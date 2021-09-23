@@ -6,8 +6,8 @@
 #define M 10 //number of math books
 
 // library book database
-int abrirArquivo(char *nomeDaMateria, int contador, int codigoMateria);
-int retiradaDeLivro(char *livroEscolhido, int linhaDeRetirada, int codigoMateria);
+int openFile(char *nameOfMatter, int counter, int codeMatter);
+int retiradaDeLivro(char *chosenBook, int withdrawalLine, int codeMatter);
 
 typedef struct
 {
@@ -25,7 +25,7 @@ typedef struct
 
 materia descricao[MAX];
 
-//codigoMateria
+//codeMatter
 // 0 = matematica
 // 1 = geografia
 // 2 = historia
@@ -44,9 +44,9 @@ int main(void)
     FILE *livros;
     int escolhaDoUsuario, tamanhoDoNome;
     char nomeDoUsuario[MAX];
-    int quantidadeDeLivros, adicaoDeLivro, codigoMateria, resetDeLivro;
-    int contador = 0;
-    int linhaDeRetirada;
+    int quantidadeDeLivros, adicaoDeLivro, codeMatter, resetDeLivro;
+    int counter = 0;
+    int withdrawalLine;
     char *livroRetirado[MAX];
 
     printf("Voce deseja adicionar um novo livro na biblioteca? [1] Sim ou [2] Nao.\n");
@@ -56,8 +56,8 @@ int main(void)
     if (resetDeLivro == 1)
     {
         printf("Digite o código da matéria que você quer resetar: ");
-        scanf("%d", &codigoMateria);
-        if (codigoMateria == 0)
+        scanf("%d", &codeMatter);
+        if (codeMatter == 0)
         {
             math = fopen("math.csv", "w");
             math = fopen("math.csv", "a");
@@ -74,45 +74,45 @@ int main(void)
         printf("Digite a quantidade de livros que voce quer armazenas.\n");
         scanf("%d", &quantidadeDeLivros);
         printf("Digite o código da matéria que você quer armazenar: ");
-        scanf("%d", &codigoMateria);
+        scanf("%d", &codeMatter);
         system("clear");
 
         getchar();
         for (int i = 0; i < quantidadeDeLivros; i++)
         {
-            if (codigoMateria == 0)
+            if (codeMatter == 0)
             {
                 math = fopen("math.csv", "a");
             }
 
             printf("Digite o nome do livro.\n");
-            fgets(descricao[codigoMateria].dados.nome, MAX, stdin);
-            tamanhoDoNome = strlen(descricao[codigoMateria].dados.nome);
-            if (descricao[codigoMateria].dados.nome[tamanhoDoNome - 1] == '\n')
+            fgets(descricao[codeMatter].dados.nome, MAX, stdin);
+            tamanhoDoNome = strlen(descricao[codeMatter].dados.nome);
+            if (descricao[codeMatter].dados.nome[tamanhoDoNome - 1] == '\n')
             {
-                descricao[codigoMateria].dados.nome[tamanhoDoNome - 1] = '\0';
+                descricao[codeMatter].dados.nome[tamanhoDoNome - 1] = '\0';
             }
 
             printf("Digite o writer do livro.\n");
-            fgets(descricao[codigoMateria].dados.writer, MAX, stdin);
-            tamanhoDoNome = strlen(descricao[codigoMateria].dados.writer);
-            if (descricao[codigoMateria].dados.writer[tamanhoDoNome - 1] == '\n')
+            fgets(descricao[codeMatter].dados.writer, MAX, stdin);
+            tamanhoDoNome = strlen(descricao[codeMatter].dados.writer);
+            if (descricao[codeMatter].dados.writer[tamanhoDoNome - 1] == '\n')
             {
-                descricao[codigoMateria].dados.writer[tamanhoDoNome - 1] = '\0';
+                descricao[codeMatter].dados.writer[tamanhoDoNome - 1] = '\0';
             }
 
             printf("Digite o content do livro.\n");
-            fgets(descricao[codigoMateria].dados.content, MAX, stdin);
-            tamanhoDoNome = strlen(descricao[codigoMateria].dados.content);
-            if (descricao[codigoMateria].dados.content[tamanhoDoNome - 1] == '\n')
+            fgets(descricao[codeMatter].dados.content, MAX, stdin);
+            tamanhoDoNome = strlen(descricao[codeMatter].dados.content);
+            if (descricao[codeMatter].dados.content[tamanhoDoNome - 1] == '\n')
             {
-                descricao[codigoMateria].dados.content[tamanhoDoNome - 1] = '\0';
+                descricao[codeMatter].dados.content[tamanhoDoNome - 1] = '\0';
             }
 
             //armazenamento em matematica
-            if (codigoMateria == 0)
+            if (codeMatter == 0)
             {
-                fprintf(math, "%s, %s, %s\n", descricao[codigoMateria].dados.nome, descricao[codigoMateria].dados.writer, descricao[codigoMateria].dados.content);
+                fprintf(math, "%s, %s, %s\n", descricao[codeMatter].dados.nome, descricao[codeMatter].dados.writer, descricao[codeMatter].dados.content);
                 fclose(math);
             }
 
@@ -198,12 +198,12 @@ int main(void)
             switch (escolhaDoUsuario)
             {
             case 1:
-                codigoMateria = 0;
+                codeMatter = 0;
 
                 //exposição dos livros de matematica
                 for (int i = 0; i < M; i++)
                 {
-                    contador = abrirArquivo(descricao[i].dados.nome, contador, codigoMateria);
+                    counter = openFile(descricao[i].dados.nome, counter, codeMatter);
                     printf("%s\n", descricao[i].dados.nome);
                 }
                 printf("Voce deseja retirar algum livro? [1] SIM ou [2] NAO\n");
@@ -211,8 +211,8 @@ int main(void)
                 if (escolhaDoUsuario == 1)
                 {
                     printf("Digite o numero presente antes do livro para retirar:\n");
-                    scanf("%d", &linhaDeRetirada);
-                    retiradaDeLivro(livroRetirado, linhaDeRetirada, codigoMateria);
+                    scanf("%d", &withdrawalLine);
+                    retiradaDeLivro(livroRetirado, withdrawalLine, codeMatter);
                     printf("Seu livro retirado foi: %s\n", livroRetirado);
                 }
                 else
@@ -239,10 +239,10 @@ int main(void)
 }
 
 // leitura do arquivo
-int abrirArquivo(char *nomeDaMateria, int contador, int codigoMateria)
+int openFile(char *nameOfMatter, int counter, int codeMatter)
 {
-    int codigo = codigoMateria;
-    contador++;
+    int codigo = codeMatter;
+    counter++;
     FILE *math;
     if (codigo == 0)
     {
@@ -257,25 +257,25 @@ int abrirArquivo(char *nomeDaMateria, int contador, int codigoMateria)
         {
             //o fgets ler tudo ate achar um \n e armazena tudo em buffer
             fgets(buffer, MAX, math);
-            fscanf(math, "%[^,]", nomeDaMateria);
+            fscanf(math, "%[^,]", nameOfMatter);
             i++;
         }
 
-    } while (i < contador);
+    } while (i < counter);
     if (codigo == 0)
     {
         fclose(math);
     }
 
-    return contador;
+    return counter;
 }
 
 //funcao para retirada de livro
 
-int retiradaDeLivro(char *livroEscolhido, int linhaDeRetirada, int codigoMateria)
+int retiradaDeLivro(char *chosenBook, int withdrawalLine, int codeMatter)
 {
     FILE *math;
-    if (codigoMateria == 0)
+    if (codeMatter == 0)
     {
         math = fopen("math.csv", "r");
     }
@@ -283,20 +283,20 @@ int retiradaDeLivro(char *livroEscolhido, int linhaDeRetirada, int codigoMateria
     FILE *retirada = fopen("transferindo.csv", "w");
     char buffer[MAX];
     int linhaAtual = 1;
-    int contador = 0;
+    int counter = 0;
     
 
-    if (codigoMateria == 0)
+    if (codeMatter == 0)
     {
         while (fgets(buffer, MAX, math) != NULL)
         {
-            if (linhaAtual != linhaDeRetirada)
+            if (linhaAtual != withdrawalLine)
             {
                 fputs(buffer, retirada);
             }
             //ajeitar a retirada de livro
 
-            strcpy(livroEscolhido, buffer);
+            strcpy(chosenBook, buffer);
             memset(buffer, 0, sizeof(char) * MAX);
             linhaAtual += 1;
         }
@@ -307,12 +307,12 @@ int retiradaDeLivro(char *livroEscolhido, int linhaDeRetirada, int codigoMateria
     //ele modifica o livro, para retirar somente o nome
     while (1)
     {
-        if (livroEscolhido[contador] == ',')
+        if (chosenBook[counter] == ',')
         {
-            livroEscolhido[contador] = '\0';
+            chosenBook[counter] = '\0';
             break;
         }
-        contador++;
+        counter++;
     }
 
     fclose(retirada);
