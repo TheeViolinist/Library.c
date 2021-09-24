@@ -7,7 +7,7 @@ Hi everyone, welcome to my first code:
 This is database code of a library and it's interface where you can do whatever you want, add a book of math? Yes, you can, add a book 
 of geography? Yes, you can. but how? Look this >
 
-<img src = "https://github.com/TheeViolinist/Library.c/blob/master/src/assets/to_readme/data1.png" width = "300px"/> <img src = "https://github.com/TheeViolinist/Library.c/blob/master/src/assets/to_readme/data2.png" width = "300px"/>
+<img src = "https://github.com/TheeViolinist/Library.c/blob/master/src/assets/to_readme/data1.png" width = "300px"/> <img src = "https://github.com/TheeViolinist/Library.c/blob/master/src/assets/to_readme/data2.png" width = "500px"/>
 
 Now you can do whatever you want, add a name, writer and contente to a book.
 
