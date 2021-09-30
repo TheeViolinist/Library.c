@@ -9,6 +9,9 @@
 int openFile(char *nameOfMatter, int counter, int codeMatter);
 int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter);
 
+//reset books
+int ResetBooks(int restart, int code);
+
 typedef struct
 {
     char writer[MAX];
@@ -57,16 +60,10 @@ int main(void)
     {
         printf("Enter the code of the materiall you want to reset: ");
         scanf("%d", &codeMatter);
-        if (codeMatter == 0)
-        {
-            math = fopen("math.csv", "w");
-            math = fopen("math.csv", "a");
-            fprintf(math, "%s, %s, %s\n", "name", "writer", "content");
-            fclose(math);
-        }
+        ResetBooks(restartBooks, codeMatter);
 
-        return 0;
     }
+    
 
     if (bookAdd == 1)
     {
@@ -320,5 +317,27 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
     fclose(withdrawal);
     remove("math.csv");
     rename("transferring.csv", "math.csv");
+    return 0;
+}
+
+
+//reset books
+int ResetBooks(int restart, int code)
+{
+
+    FILE *math;
+    if (restart == 1)
+    {
+        
+        if (code == 0)
+        {
+            math = fopen("math.csv", "w");
+            math = fopen("math.csv", "a");
+            fprintf(math, "%s, %s, %s\n", "name", "writer", "content");
+            fclose(math);
+        }
+
+       
+    }
     return 0;
 }
