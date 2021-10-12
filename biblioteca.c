@@ -11,8 +11,9 @@ int openFile(char *nameOfMatter, int counter, int codeMatter);
 int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter);
 
 //reset books
-int ResetBooks(int restart, int code);
+void ResetBooks(int restart, int code);
 
+/*Data storage of books*/
 typedef struct
 {
     char writer[MAX];
@@ -44,21 +45,28 @@ void clean(void);
 
 int main(void)
 {
-    FILE *math;
-    FILE *livros;
-    FILE *geograph;
-    int userChoice, nameSize;
-    char nameUser[MAX];
-    int numberBooks, bookAdd, codeMatter, restartBooks;
-    int counter = 0;
-    int withdrawalLine;
-    char *withdrawnBook[MAX];
+    FILE *math;                                             /*pointing out of books*/                           
+    FILE *livros;                                           /*pointing out of books*/ 
+    FILE *geograph;                                         /*pointing out of books*/ 
 
+    char nameUser[MAX];                                     /*nameUser = name of user*/
+    char *withdrawnBook[MAX];                               /*withdrawnBook = name of the withdrawn books*/
+
+    int userChoice, nameSize;                               /* variable of choice user */                                         
+    int numberBooks, bookAdd, codeMatter, restartBooks;
+    
+    int counter = 0;                                        /*regulatory variables */
+    int withdrawalLine;             
+    
+
+    /* If I wanna change the books, I click 1 */
     printf("Do you wanna adding a book to library? [1] Yes or [2] No.\n");
     scanf("%d", &bookAdd);
+    /* If I wanna restart the books, I click 1 */
     printf("Do you wanna reset the books? [1] Yes or [2] No\n");
     scanf("%d", &restartBooks);
 
+    /*this scope will scan the code of material and call the function ResetBooks */
     if (restartBooks == 1)
     {
         printf("Enter the code of the materiall you want to reset: ");
@@ -67,17 +75,21 @@ int main(void)
 
     }
     
-
+    /*This scope will adding books to the corresponding file to the code*/
     if (bookAdd == 1)
     {
-        //data of books
+        /*Here it will scan the number of books to add */
         printf("Enter the number of books you want to store.\n");
         scanf("%d", &numberBooks);
+        /*and here the code of corresponding material */
         printf("Enter the code of the materiall you want to add: ");
         scanf("%d", &codeMatter);
-        system("clear");
 
+        system("clear");
+        /*This getchar scan the '\n' */
         getchar();
+
+        /*This loop will open the file and add all of the book's features */
         for (int i = 0; i < numberBooks; i++)
         {
             if (codeMatter == 0)
@@ -92,6 +104,7 @@ int main(void)
             printf("Enter the name of the book.\n");
             fgets(description[codeMatter].data.name, MAX, stdin);
             nameSize = strlen(description[codeMatter].data.name);
+
             if (description[codeMatter].data.name[nameSize - 1] == '\n')
             {
                 description[codeMatter].data.name[nameSize - 1] = '\0';
@@ -100,6 +113,7 @@ int main(void)
             printf("Enter the writer of the book.\n");
             fgets(description[codeMatter].data.writer, MAX, stdin);
             nameSize = strlen(description[codeMatter].data.writer);
+
             if (description[codeMatter].data.writer[nameSize - 1] == '\n')
             {
                 description[codeMatter].data.writer[nameSize - 1] = '\0';
@@ -108,12 +122,13 @@ int main(void)
             printf("Enter the content of the book.\n");
             fgets(description[codeMatter].data.content, MAX, stdin);
             nameSize = strlen(description[codeMatter].data.content);
+
             if (description[codeMatter].data.content[nameSize - 1] == '\n')
             {
                 description[codeMatter].data.content[nameSize - 1] = '\0';
             }
 
-            //data of math
+            /*Here, the code will open the file, and annex all datas */
             if (codeMatter == 0)
             {
                 fprintf(math, "%s, %s, %s\n", description[codeMatter].data.name, description[codeMatter].data.writer, description[codeMatter].data.content);
@@ -211,28 +226,33 @@ int main(void)
             case 1:
                 codeMatter = 0;
 
-                //Showing math books
+                /* Here, this loop will call the function OpenFIle and */
+                /* This function have 3 parameters, the pointer of books name*/
+                /*A counter and the material code */
                 for (int i = 0; i < M; i++)
                 {
                     counter = openFile(description[i].data.name, counter, codeMatter);
                     printf("%s\n", description[i].data.name);
                 }
+
+                
                 printf("Do you want to withdraw a book? [1] Yes or [2] No\n");
                 scanf("%d", &userChoice);
+                
+                /*Thins condition will call the function Book Withdrawal*/
                 if (userChoice == 1)
                 {
                     printf("Enter the number present before the book to withdraw:\n");
                     scanf("%d", &withdrawalLine);
+                    
                     bookWithdrawal(withdrawnBook, withdrawalLine, codeMatter);
                     printf("Your withdrawn book was: %s\n", withdrawnBook);
+                    
                 }
-                else
-                {
-                    break;
-                }
-                
-            }
-        case 2:
+
+                break;
+
+            case 2:
                 codeMatter = 1;
                 
                 /*showing geography book */
@@ -241,7 +261,12 @@ int main(void)
                     counter = openFile(description[i].data.name, counter, codeMatter);
                     printf("%s\n", description[i].data.name);
                 }
-
+                break;
+    
+            }
+        break;
+        case 2:
+                
 
 
                 break;
@@ -258,13 +283,30 @@ int main(void)
     }
 }
 
-// File read
+/***
+ * OpenFile(): Change the contents of the book name pointer.
+ *              First will add 1 to counter, because I want to
+ *              Start in the second line, when arrives in 
+ *              "fgets" I go to read everything until find a
+ *              '\n' and stock on buffer and later, I gonna
+ *              scan until find a ',' and stock on address book name.
+ *              When the main loop close, return the counter, because
+ *              it will start on the previous line plus one.
+ * 
+ * Parameters: 
+ *          nameOfMatter = memory address book name
+ *          counter = limit the read
+ *          codeMatter = books code
+ * 
+ * return: The limit of the read
+ ***/
 int openFile(char *nameOfMatter, int counter, int codeMatter)
 {
     int code = codeMatter;
     counter++;
     FILE *math;
     FILE *geograph;
+
     if (code == 0)
     {
         math = fopen("math.csv", "r");
@@ -306,7 +348,25 @@ int openFile(char *nameOfMatter, int counter, int codeMatter)
     return counter;
 }
 
-//book withdrawal function
+/***
+ * bookWithdrawal(): This function removes a book chosen by the user,
+ *                  and create a new file.
+ *                  When arrives in the main lopp, the fgets will read 
+ *                  the file until the NULL, and stores everything 
+ *                  that is not the chosen book in a new file.
+ *                  And copy everything in string chosenBOok.
+ *                  In the second loop, withdraw the name of the book.
+ * 
+ *                  
+ * 
+ * 
+ * Parameters: 
+ *          chosenBook = memory address book name
+ *          whidrawanlLine = withdrawal line
+ *          codeMatter = books code
+ * 
+ * return: nothing
+ ***/
 
 int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
 {
@@ -317,6 +377,7 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
     }
     
     FILE *withdrawal = fopen("transferring.csv", "w");
+    
     char buffer[MAX];
     int currentLine = 1;
     int counter = 0;
@@ -330,7 +391,7 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
             {
                 fputs(buffer, withdrawal);
             }
-
+            
             
 
             strcpy(chosenBook, buffer);
@@ -359,8 +420,18 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
 }
 
 
-//reset books
-int ResetBooks(int restart, int code)
+/***
+ * ResetBooks(): This function reset the files book.
+ *              
+ * 
+ *       
+ * Parameters: 
+ *          Restart = If i wanna restart or no.
+ *          codeMatter = books code
+ * 
+ * return: nothing
+ ***/
+void ResetBooks(int restart, int code)
 {
     FILE *geograph;
     FILE *math;
@@ -384,5 +455,4 @@ int ResetBooks(int restart, int code)
 
        
     }
-    return 0;
 }
