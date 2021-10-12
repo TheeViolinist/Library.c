@@ -1,18 +1,8 @@
 Hi everyone, welcome to my first code or should i say : Whelcome to my library:
 
 <div align = "center" >
-```c
-printf(" __________________________________________\n"
-           " |                                         |\n"
-           " |                                         |\n"
-           " |                                         |\n"
-           " |                                         |\n"
-           " |     Welcome to libraby Penbookers       |\n"
-           " |                                         |\n"
-           " |                                         |\n"
-           " |                                         |\n"
-           " |_________________________________________|\n");
-```
+<img src = "https://github.com/TheeViolinist/Library.c/blob/master/src/assets/to_readme/welcome.png" width : "300px"/>
+
 </div>
 
 This is database code of a library and it's interface where you can do whatever you want, add a book of math? Yes, you can, add a book 
