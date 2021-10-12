@@ -4,6 +4,7 @@
 
 #define MAX 200
 #define M 10 //number of math books
+#define G 5
 
 // library book database
 int openFile(char *nameOfMatter, int counter, int codeMatter);
@@ -45,6 +46,7 @@ int main(void)
 {
     FILE *math;
     FILE *livros;
+    FILE *geograph;
     int userChoice, nameSize;
     char nameUser[MAX];
     int numberBooks, bookAdd, codeMatter, restartBooks;
@@ -56,6 +58,7 @@ int main(void)
     scanf("%d", &bookAdd);
     printf("Do you wanna reset the books? [1] Yes or [2] No\n");
     scanf("%d", &restartBooks);
+
     if (restartBooks == 1)
     {
         printf("Enter the code of the materiall you want to reset: ");
@@ -80,6 +83,10 @@ int main(void)
             if (codeMatter == 0)
             {
                 math = fopen("math.csv", "a");
+            }
+            else if (codeMatter == 1)
+            {
+                geograph = fopen("geograph.csv", "a");
             }
 
             printf("Enter the name of the book.\n");
@@ -112,6 +119,12 @@ int main(void)
                 fprintf(math, "%s, %s, %s\n", description[codeMatter].data.name, description[codeMatter].data.writer, description[codeMatter].data.content);
                 fclose(math);
             }
+            else if (codeMatter == 1)
+            {
+                fprintf(geograph, "%s, %s, %s\n", description[codeMatter].data.name, description[codeMatter].data.writer, description[codeMatter].data.content);
+                fclose(geograph);
+            }
+
 
             system("clear");
         }
@@ -217,12 +230,21 @@ int main(void)
                 {
                     break;
                 }
-                break;
+                
             }
         case 2:
-            //Showing geography books
+                codeMatter = 1;
+                
+                /*showing geography book */
+                for (int i = 0; i < G; i++)
+                {
+                    counter = openFile(description[i].data.name, counter, codeMatter);
+                    printf("%s\n", description[i].data.name);
+                }
 
-            break;
+
+
+                break;
         }
         break;
 
@@ -242,9 +264,14 @@ int openFile(char *nameOfMatter, int counter, int codeMatter)
     int code = codeMatter;
     counter++;
     FILE *math;
+    FILE *geograph;
     if (code == 0)
     {
         math = fopen("math.csv", "r");
+    }
+    else if (code == 1)
+    {
+        geograph = fopen("geograph.csv", "r");
     }
 
     char buffer[MAX];
@@ -258,11 +285,22 @@ int openFile(char *nameOfMatter, int counter, int codeMatter)
             fscanf(math, "%[^,]", nameOfMatter);
             i++;
         }
+        else if (code == 1)
+        {
+            fgets(buffer, MAX, geograph);
+            fscanf(geograph, "%[^,]", nameOfMatter);
+            i++;
+        }
 
     } while (i < counter);
+
     if (code == 0)
     {
         fclose(math);
+    }
+    else if (code == 1)
+    {
+        fclose(geograph);
     }
 
     return counter;
@@ -324,7 +362,7 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
 //reset books
 int ResetBooks(int restart, int code)
 {
-
+    FILE *geograph;
     FILE *math;
     if (restart == 1)
     {
@@ -335,6 +373,13 @@ int ResetBooks(int restart, int code)
             math = fopen("math.csv", "a");
             fprintf(math, "%s, %s, %s\n", "name", "writer", "content");
             fclose(math);
+        }
+        if (code == 1)
+        {
+            geograph = fopen("geograph.csv", "w");
+            geograph = fopen("geograph.csv", "a");
+            fprintf(geograph, "%s, %s, %s\n", "name", "writer", "content");
+            fclose(geograph);
         }
 
        
