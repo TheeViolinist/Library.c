@@ -261,6 +261,19 @@ int main(void)
                     counter = openFile(description[i].data.name, counter, codeMatter);
                     printf("%s\n", description[i].data.name);
                 }
+                printf("Do you want to withdraw a book? [1] Yes or [2] No\n");
+                scanf("%d", &userChoice);
+                
+                /*Thins condition will call the function Book Withdrawal*/
+                if (userChoice == 1)
+                {
+                    printf("Enter the number present before the book to withdraw:\n");
+                    scanf("%d", &withdrawalLine);
+                    
+                    bookWithdrawal(withdrawnBook, withdrawalLine, codeMatter);
+                    printf("Your withdrawn book was: %s\n", withdrawnBook);
+                    
+                }
                 break;
     
             }
@@ -371,9 +384,14 @@ int openFile(char *nameOfMatter, int counter, int codeMatter)
 int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
 {
     FILE *math;
+    FILE *geograph;
     if (codeMatter == 0)
     {
         math = fopen("math.csv", "r");
+    }
+    else if (codeMatter == 1)
+    {
+        geograph = fopen("geograph.csv", "r");
     }
     
     FILE *withdrawal = fopen("transferring.csv", "w");
@@ -382,7 +400,7 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
     int currentLine = 1;
     int counter = 0;
     
-
+    /*  Withdrawn math books    */
     if (codeMatter == 0)
     {
         while (fgets(buffer, MAX, math) != NULL)
@@ -391,15 +409,41 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
             {
                 fputs(buffer, withdrawal);
             }
-            
-            
+            else
+            {
+                strcpy(chosenBook, buffer);
+            }
 
-            strcpy(chosenBook, buffer);
+            
             memset(buffer, 0, sizeof(char) * MAX);
             currentLine += 1;
         }
         fclose(math);
     }
+
+    /*  Withdrawn geography books    */
+    if (codeMatter == 1)
+    {
+        while (fgets(buffer, MAX, geograph) != NULL)
+        {
+            if (currentLine != withdrawalLine)
+            {
+                fputs(buffer, withdrawal);
+            }
+
+            else
+            {
+                strcpy(chosenBook, buffer);
+            }
+            
+    
+            memset(buffer, 0, sizeof(char) * MAX);
+            currentLine += 1;
+        }
+        fclose(geograph);
+
+    }
+    
     
   
     //modifies the book, to remove only the name
@@ -414,8 +458,20 @@ int bookWithdrawal(char *chosenBook, int withdrawalLine, int codeMatter)
     }
 
     fclose(withdrawal);
-    remove("math.csv");
-    rename("transferring.csv", "math.csv");
+
+    /*  organizing math data   */
+    if(codeMatter == 0)
+    {
+        remove("math.csv");
+        rename("transferring.csv", "math.csv");
+    }
+    /* organizing geography data    */
+    if (codeMatter == 1)
+    {
+        remove("geograph.csv");
+        rename("transferring.csv", "geograph.csv");
+    }
+    
     return 0;
 }
 
